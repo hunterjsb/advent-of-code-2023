@@ -39,7 +39,9 @@ func main() {
 				fn = b[0]
 			}
 			ln = b[0]
+		} else if b[0] == '\n' { // newline
+			fmt.Printf("First numeric byte: %c, Last numeric byte: %c\n", fn, ln)
+			fn, ln = 0, 0
 		}
 	}
-	fmt.Println(fn, ln)
 }
