@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 )
 
-const ChunkSize int = 512
+var buf [1]byte
 
 func check(e error) {
 	if e != nil {
@@ -28,15 +29,17 @@ func main() {
 
 	// get the size
 	size := int(info.Size())
-	chunks := size / ChunkSize
-	remainder := size % ChunkSize
-	fmt.Printf("%v bytes | %v chunks | Remainder %v\n", size, chunks, remainder)
+	fmt.Printf("%v bytes", size)
 
 	// iterate over the bytes
-	buf := make([]byte, ChunkSize)
-	for i := 0; i < chunks; i++ {
-		n, err := f.Read(buf)
-		check(err)
-		fmt.Println("\n", n, "buff ", buf)
+	for i := 0; i < size; i++ {
+		_, err := f.Read(buf[:])
+		if err == io.EOF {
+			break // End of file reached
+		}
+		if err != nil {
+			check(err) // Handle other errors
+		}
+		fmt.Println("buff ", buf)
 	}
 }
