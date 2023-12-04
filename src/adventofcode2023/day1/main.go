@@ -20,6 +20,12 @@ func isNumeric(b byte) bool {
 	return b >= '0' && b <= '9' // '0' to '9' in ASCII
 }
 
+func convertDigits(a, b byte) int {
+	firstDigit := a - '0'
+	lastDigit := b - '0'
+	return int(firstDigit)*10 + int(lastDigit)
+}
+
 func main() {
 	// open file
 	file, err := os.Open(filename)
@@ -28,6 +34,7 @@ func main() {
 
 	// iterate over the bytes
 	var fn, ln byte
+	sum := 0
 	for {
 		_, err := file.Read(b[:])
 		if err == io.EOF {
@@ -39,9 +46,11 @@ func main() {
 				fn = b[0]
 			}
 			ln = b[0]
-		} else if b[0] == '\n' { // newline
-			fmt.Printf("First numeric byte: %c, Last numeric byte: %c\n", fn, ln)
+		} else if b[0] == '\n' {
+			n := convertDigits(fn, ln)
+			sum += n
 			fn, ln = 0, 0
 		}
 	}
+	fmt.Println("sum", sum)
 }
