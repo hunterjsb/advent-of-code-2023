@@ -5,9 +5,7 @@ import (
 	"os"
 )
 
-const ChunkSize int = 4
-
-var buf []byte = make([]byte, ChunkSize)
+const ChunkSize int = 512
 
 func check(e error) {
 	if e != nil {
@@ -23,7 +21,7 @@ func getFile(filename string) *os.File {
 
 func main() {
 	// open file
-	f := getFile("day1/input.txt")
+	f := getFile("input.txt")
 	defer f.Close()
 	info, err := f.Stat()
 	check(err)
@@ -34,6 +32,8 @@ func main() {
 	remainder := size % ChunkSize
 	fmt.Printf("%v bytes | %v chunks | Remainder %v\n", size, chunks, remainder)
 
+	// iterate over the bytes
+	buf := make([]byte, ChunkSize)
 	for i := 0; i < chunks; i++ {
 		n, err := f.Read(buf)
 		check(err)
