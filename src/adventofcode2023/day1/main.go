@@ -6,7 +6,9 @@ import (
 	"os"
 )
 
-var buf [1]byte
+const filename string = "input.txt"
+
+var b [1]byte
 
 func check(e error) {
 	if e != nil {
@@ -14,32 +16,30 @@ func check(e error) {
 	}
 }
 
-func getFile(filename string) *os.File {
-	file, err := os.Open(filename)
-	check(err)
-	return file
+func isNumeric(b byte) bool {
+	return b >= '0' && b <= '9' // '0' to '9' in ASCII
 }
 
 func main() {
 	// open file
-	f := getFile("input.txt")
-	defer f.Close()
-	info, err := f.Stat()
+	file, err := os.Open(filename)
 	check(err)
-
-	// get the size
-	size := int(info.Size())
-	fmt.Printf("%v bytes", size)
+	defer file.Close()
 
 	// iterate over the bytes
-	for i := 0; i < size; i++ {
-		_, err := f.Read(buf[:])
+	var fn, ln byte
+	for {
+		_, err := file.Read(b[:])
 		if err == io.EOF {
-			break // End of file reached
+			break
 		}
-		if err != nil {
-			check(err) // Handle other errors
+
+		if isNumeric(b[0]) {
+			if fn == 0 {
+				fn = b[0]
+			}
+			ln = b[0]
 		}
-		fmt.Println("buff ", buf)
 	}
+	fmt.Println(fn, ln)
 }
