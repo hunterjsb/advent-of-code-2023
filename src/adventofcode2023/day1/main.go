@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+// warning! make sure there is an empty line at the bottom of input.txt!
+
 const filename string = "input.txt"
 
 var b [1]byte
