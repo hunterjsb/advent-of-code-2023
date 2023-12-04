@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+const ChunkSize int = 4
+
+var buf []byte = make([]byte, ChunkSize)
+
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -26,9 +30,13 @@ func main() {
 
 	// get the size
 	size := int(info.Size())
-	fmt.Printf("Size: %v KB\n", float64(size)/1000.0)
+	chunks := size / ChunkSize
+	remainder := size % ChunkSize
+	fmt.Printf("%v bytes | %v chunks | Remainder %v\n", size, chunks, remainder)
 
-	for i := 0; i < size; i++ {
-		fmt.Println(i)
+	for i := 0; i < chunks; i++ {
+		n, err := f.Read(buf)
+		check(err)
+		fmt.Println("\n", n, "buff ", buf)
 	}
 }
