@@ -6,12 +6,12 @@ import (
 )
 
 func TestGetValidPrefixes(t *testing.T) {
-	testWords := []string{"zero", "one", "two"}
-	expectedPrefixes := []string{"zero", "one", "two"}
+	// testWords := []string{"zero", "one", "two"}
+	// expectedPrefixes := []string{"zero", "one", "two"}
 
-	actualPrefixes := GetValidPrefixes(testWords)
+	actualPrefixes := GetValidPrefixes(TextDigits[:])
 
-	if !reflect.DeepEqual(actualPrefixes, expectedPrefixes) {
-		t.Errorf("getValidPrefixes() = %v; want %v", actualPrefixes, expectedPrefixes)
+	if !reflect.DeepEqual(actualPrefixes, TextDigits) {
+		t.Errorf("getValidPrefixes() = %v; want %v", actualPrefixes, TextDigits)
 	}
 }
