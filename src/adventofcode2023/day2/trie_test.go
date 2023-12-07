@@ -9,7 +9,7 @@ func TestGetValidPrefixes(t *testing.T) {
 	// testWords := []string{"zero", "one", "two"}
 	// expectedPrefixes := []string{"zero", "one", "two"}
 
-	actualPrefixes := GetValidPrefixes(TextDigits[:])
+	actualPrefixes := GetPrefixTrie(TextDigits[:])
 
 	if !reflect.DeepEqual(actualPrefixes, TextDigits) {
 		t.Errorf("getValidPrefixes() = %v; want %v", actualPrefixes, TextDigits)

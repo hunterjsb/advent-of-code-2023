@@ -17,16 +17,23 @@ func newNode() *node {
 	}
 }
 
-func GetValidPrefixes(words []string) map[rune]*node {
+func GetPrefixTrie(words []string) map[rune]*node {
 	var curNode *node
 	rootNodes := make(map[rune]*node)
 
 	for _, word := range words {
 		for i, ch := range word {
 			//fmt.Printf("%c(%v) ", ch, ch)
-			if _, exists := rootNodes[ch]; !exists && i == 0 { // first letter is root node
+			if _, exists := rootNodes[ch]; !exists && i == 0 { // first letter new root node
 				rootNodes[ch] = newNode()
 				curNode = rootNodes[ch]
+			} else if rootNode, exists := rootNodes[ch]; exists && i == 0 { // first letter already has root node
+				curNode = rootNode
+			} else if _, exists := curNode.children[ch]; !exists && i > 0 { // new child
+				curNode.children[ch] = newNode()
+				fmt.Printf("appending child %v\n", curNode.children)
+			} else if childNode, exists := curNode.children[ch]; exists && i > 0 {
+				curNode = childNode
 			}
 		}
 		fmt.Printf("root nodes: %v", rootNodes)
