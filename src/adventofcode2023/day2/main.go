@@ -10,7 +10,7 @@ import (
 
 const filename string = "input.txt"
 
-var TextDigits = [10]string{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
+var b [1]byte
 
 func check(e error) {
 	if e != nil {
@@ -18,56 +18,41 @@ func check(e error) {
 	}
 }
 
-func isDigit(b byte) bool {
-	return b >= '0' && b <= '9'
+func isNumeric(b byte) bool {
+	return b >= '0' && b <= '9' // '0' to '9' in ASCII
 }
 
 func convertDigits(a, b byte) int {
-	firstDigit := a - '0' // ascii to int, same as a - 48
+	firstDigit := a - '0'
 	lastDigit := b - '0'
 	return int(firstDigit)*10 + int(lastDigit)
 }
 
-func setN(first, n byte) (byte, byte) {
-	if first == 0 {
-		first = n
-	}
-	return first, n
-}
-
 func main() {
-	var curNode *Node
-	//var prefix []rune
-	var buf [1]byte
-
 	// open file
 	file, err := os.Open(filename)
 	check(err)
 	defer file.Close()
 
 	// iterate over the bytes
-	var fn, ln byte // first num, last num per line
+	var fn, ln byte
 	sum := 0
 	for {
-		// read next byte and check for eof
-		_, err := file.Read(buf[:])
-		b := buf[0]
-		fmt.Printf("%c! %p\n", b, curNode)
+		_, err := file.Read(b[:])
 		if err == io.EOF {
 			break
 		}
 
-		// check if it's a digit
-		if isDigit(b) {
-			fn, ln = setN(fn, ln)
-			fmt.Printf("is digit %c %v %v#\n", b, fn, ln)
-		}
-
-		if b == '\n' {
-			sum += convertDigits(fn, ln)
-			fmt.Printf("summing %v to %v\n", convertDigits(fn, ln), sum)
+		if isNumeric(b[0]) {
+			if fn == 0 {
+				fn = b[0]
+			}
+			ln = b[0]
+		} else if b[0] == '\n' {
+			n := convertDigits(fn, ln)
+			sum += n
+			fn, ln = 0, 0
 		}
 	}
-
 	fmt.Println("sum", sum)
 }
