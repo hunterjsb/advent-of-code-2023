@@ -1,17 +1,31 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 )
 
-func TestGetValidPrefixes(t *testing.T) {
-	// testWords := []string{"zero", "one", "two"}
-	// expectedPrefixes := []string{"zero", "one", "two"}
+func TestGetPrefixTrie(t *testing.T) {
+	words := TextDigits[:]
+	rootNodes := GetPrefixTrie(words)
 
-	actualPrefixes := GetPrefixTrie(TextDigits[:])
+	// Test that each word is in the trie
+	for _, word := range words {
+		curNode := rootNodes[rune(word[0])]
+		if curNode == nil {
+			t.Errorf("Root node for '%c' not found", word[0])
+			continue
+		}
 
-	if !reflect.DeepEqual(actualPrefixes, TextDigits) {
-		t.Errorf("getValidPrefixes() = %v; want %v", actualPrefixes, TextDigits)
+		for _, ch := range word[1:] {
+			curNode = curNode.Traverse(ch)
+			if curNode == nil {
+				t.Errorf("Node for character '%c' in word '%s' not found in trie", ch, word)
+				break
+			}
+		}
+
+		if !curNode.isWordEnd {
+			t.Errorf("Word '%s' not marked as complete in trie", word)
+		}
 	}
 }
