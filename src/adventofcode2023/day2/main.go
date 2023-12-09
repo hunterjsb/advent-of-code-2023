@@ -10,6 +10,8 @@ import (
 
 const filename string = "input.txt"
 
+var TextDigits = [10]string{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
+
 var b [1]byte
 
 func check(e error) {
