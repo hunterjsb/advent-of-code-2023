@@ -94,10 +94,8 @@ func main() {
 	numLoop:
 		for _, pt := range pts {
 			for _, adjPt := range pt.adjacent() {
-				//fmt.Printf("%v is adj to %v\n", adjPt, pt)
 				if _, exists := symbols[adjPt]; exists {
 					sum += *num
-					fmt.Printf("adding %v to %v \n", num, sum)
 					break numLoop
 				}
 			}
