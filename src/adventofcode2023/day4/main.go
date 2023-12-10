@@ -33,12 +33,13 @@ func main() {
 			fmt.Printf("%c%c ", buf[i], buf[i+1])
 			n := toInt(buf[i], buf[i+1])
 			if slices.Contains(nums, n) {
-				sum += 1 << matches
 				matches++
-				fmt.Printf("(%v) [+%v(%v) = %v]  ", n, 1<<(matches-1), matches, sum)
 			}
 		}
 		fmt.Print("\n")
+		if matches > 0 {
+			sum += 1 << (matches - 1)
+		}
 		nums = nil
 		matches = 0
 	}
