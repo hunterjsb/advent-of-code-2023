@@ -3,51 +3,39 @@ package main
 import (
 	"fmt"
 	"os"
-	"slices"
+	"strconv"
 )
 
-// toInt converts a pair of ASCII characters representing digits
-// into their integer value. If the first character is not a digit,
-// it returns the value of the second character as an integer.
-func toInt(a byte, b byte) int {
-	if a < '0' {
-		return int(b - '0')
-	}
-	return int(a-'0')*10 + int(b-'0')
+// don't forget newline before eof
+const filename string = "test_input.txt"
+
+func isNumeric(b byte) bool {
+	return b >= '0' && b <= '9'
 }
 
 func main() {
-	var buf [117]byte // 116 characters per line, plus one for newline
-	var sum, matches int
-	hand := make([]int, 0) // Slice to store integer values for each hand
+	buf := make([]byte, 1)
+	num := make([]byte, 0)
+	// seeds := make([]int, 0)
 
-	file, _ := os.Open("input.txt")
+	file, _ := os.Open(filename)
 	defer file.Close()
 
-	for y := 0; y < 220; y++ {
-		file.Read(buf[:])
-
-		// Parse the first part of the line to get hand values
-		for i := 10; i < 39; i += 3 {
-			hand = append(hand, toInt(buf[i], buf[i+1]))
-		}
-
-		// Check for matches in the second part of the line
-		for i := 42; i < 115; i += 3 {
-			n := toInt(buf[i], buf[i+1])
-			if slices.Contains(hand, n) {
-				matches++
+	for i := 0; i < 33; i++ {
+		for {
+			file.Read(buf)
+			if isNumeric(buf[0]) {
+				num = append(num, buf[0])
+			} else if buf[0] == 32 && len(num) > 0 {
+				n, _ := strconv.Atoi(string(num))
+				fmt.Printf(" [[%v]] ", n)
+				num = nil
+			} else if buf[0] == 10 {
+				n, _ := strconv.Atoi(string(num))
+				fmt.Printf(" [{%v}]\n", n)
+				num = nil
+				break
 			}
 		}
-
-		// If there are matches, add to sum based on the number of matches
-		if matches > 0 {
-			sum += 1 << (matches - 1) // Double the sum for each match
-		}
-
-		// Reset hand and matches for the next line
-		hand = nil
-		matches = 0
 	}
-	fmt.Println("SUM: ", sum) // Print the final sum
 }
